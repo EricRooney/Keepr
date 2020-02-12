@@ -6,31 +6,38 @@ using Keepr.Repositories;
 
 namespace Keepr.Services
 {
-  public class KeepsService
+  public class VaultsService
   {
-    private readonly KeepsRepository _repo;
-    public KeepsService(KeepsRepository repo)
+    private readonly VaultsRepository _repo;
+    public VaultsService(VaultsRepository repo)
     {
       _repo = repo;
     }
-    public IEnumerable<Keep> Get()
+    public IEnumerable<Vault> Get(string userId)
     {
-      return _repo.Get();
+      return _repo.Get(userId);
     }
 
-    internal Keep GetById(int id)
+    internal Vault GetById(int id, string userId)
     {
       var exists = _repo.GetById(id);
       if (exists == null) { throw new Exception("Invalid Id"); }
-      return exists;
+      if (exists.UserId == userId)
+      {
+        return exists;
+      }
+      else
+      {
+        throw new Exception("You cannot get vaults you didn't create");
+      }
     }
 
-    public Keep Create(Keep newKeep)
+    public Vault Create(Vault newVault)
     {
-      return _repo.Create(newKeep);
+      return _repo.Create(newVault);
     }
 
-    internal Keep Edit(Keep update)
+    internal Vault Edit(Vault update)
     {
       var data = _repo.GetById(update.Id);
       if (data == null) { throw new Exception("Invalid Update Id"); }
@@ -52,7 +59,7 @@ namespace Keepr.Services
       }
       else
       {
-        throw new Exception("You cannot delete keeps you didn't create");
+        throw new Exception("You cannot delete vaults you didn't create");
       }
     }
   }

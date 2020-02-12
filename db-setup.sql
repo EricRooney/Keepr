@@ -1,4 +1,4 @@
--- USE keepr13;
+USE dbkeepr;
 
 -- CREATE TABLE vaults (
 --     id int NOT NULL AUTO_INCREMENT,
@@ -48,6 +48,9 @@
 -- INNER JOIN keeps k ON k.id = vk.keepId 
 -- WHERE (vaultId = @vaultId AND vk.userId = @userId) 
 
+-- Test things
+-- INSERT INTO keeps (name, description, userId, isPrivate) VALUES ("Eric's Realest Keep Test", "Realest Keep Test Description", "auth0|5e3ddaa1b5d4970ef3ed11df", 0);
+-- INSERT INTO vaults (name, description, userId) VALUES ("Eric's Realest Vault Test", "Realest Vault Test Description", "auth0|5e3ddaa1b5d4970ef3ed11df")
 
 
 -- -- USE THIS TO CLEAN OUT YOUR DATABASE
