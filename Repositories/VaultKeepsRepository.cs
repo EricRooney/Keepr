@@ -19,6 +19,12 @@ namespace Keepr.Repositories
       return _db.QueryFirstOrDefault<VaultKeep>(sql, vk);
     }
 
+    internal VaultKeep Find(int VId, int KId)
+    {
+      string sql = "SELECT * FROM vaultkeeps WHERE (keepId = @KId AND vaultId = @VId)";
+      return _db.QueryFirstOrDefault<VaultKeep>(sql, new { VId, KId });
+    }
+
     internal IEnumerable<Keep> GetKeepsByVaultId(int vaultId, string userId)
     {
       string sql = @"SELECT k.* FROM vaultkeeps vk

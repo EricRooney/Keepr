@@ -18,10 +18,21 @@ namespace Keepr.Services
       return _repo.Get();
     }
 
+    internal Keep GetById(int id, string UserId)
+    {
+      Keep exists = _repo.GetById(id);
+      if (exists == null) { throw new Exception("Invalid Id"); }
+      if (exists.UserId != UserId) { if (exists.IsPrivate == true) { throw new Exception("Invalid Id"); } else { return exists; } }
+      else
+      {
+        return exists;
+      }
+    }
     internal Keep GetById(int id)
     {
-      var exists = _repo.GetById(id);
+      Keep exists = _repo.GetById(id);
       if (exists == null) { throw new Exception("Invalid Id"); }
+      if (exists.IsPrivate == true) { throw new Exception("Invalid Id"); }
       return exists;
     }
 
@@ -34,11 +45,15 @@ namespace Keepr.Services
     {
       var data = _repo.GetById(update.Id);
       if (data == null) { throw new Exception("Invalid Update Id"); }
-
-      // update.AuthorId = data.AuthorId
-
-      _repo.Edit(update);
-      return update;
+      if (data.UserId == update.UserId)
+      {
+        _repo.Edit(update);
+        return update;
+      }
+      else
+      {
+        throw new Exception("You cannot edit keeps you didn't create");
+      }
     }
 
     internal string Delete(int id, string userId)

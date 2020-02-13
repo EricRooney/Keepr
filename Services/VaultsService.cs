@@ -41,11 +41,15 @@ namespace Keepr.Services
     {
       var data = _repo.GetById(update.Id);
       if (data == null) { throw new Exception("Invalid Update Id"); }
-
-      // update.AuthorId = data.AuthorId
-
-      _repo.Edit(update);
-      return update;
+      if (data.UserId == update.UserId)
+      {
+        _repo.Edit(update);
+        return update;
+      }
+      else
+      {
+        throw new Exception("You cannot edit vaults you didn't create");
+      }
     }
 
     internal string Delete(int id, string userId)

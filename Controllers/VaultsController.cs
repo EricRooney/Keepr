@@ -69,7 +69,9 @@ namespace Keepr.Controllers
     {
       try
       {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         update.Id = id;
+        update.UserId = userId;
         return Ok(_ks.Edit(update));
       }
       catch (Exception e)

@@ -28,12 +28,19 @@ namespace Keepr.Services
       return;
     }
 
-    internal string Delete(VaultKeep vks)
+    internal string Delete(int id1, int id2, string userId)
     {
-      VaultKeep exists = _repo.Find(vks);
+      VaultKeep exists = _repo.Find(id1, id2);
       if (exists == null) { throw new Exception("Invalid Id Combination"); }
-      _repo.Delete(exists.Id);
-      return "Successfully Deleted";
+      if (exists.UserId == userId)
+      {
+        _repo.Delete(exists.Id);
+        return "Successfully Deleted";
+      }
+      else
+      {
+        throw new Exception("You cannot delete keeps you didn't create");
+      }
     }
   }
 }

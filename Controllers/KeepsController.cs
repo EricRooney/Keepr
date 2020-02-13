@@ -13,7 +13,6 @@ namespace Keepr.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  [Authorize]
   public class KeepsController : ControllerBase
   {
     private readonly KeepsService _ks;
@@ -26,7 +25,6 @@ namespace Keepr.Controllers
     {
       try
       {
-        // var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         return Ok(_ks.Get());
       }
       catch (Exception e)
@@ -40,7 +38,9 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_ks.GetById(id));
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        if (userId == null) { return Ok(_ks.GetById(id)); }
+        return Ok(_ks.GetById(id, userId));
       }
       catch (Exception e)
       {
@@ -49,6 +49,7 @@ namespace Keepr.Controllers
     }
 
     [HttpPost]
+    [Authorize]
     public ActionResult<Keep> Post([FromBody] Keep newKeep)
     {
       try
@@ -64,11 +65,14 @@ namespace Keepr.Controllers
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public ActionResult<Keep> Edit([FromBody] Keep update, int id)
     {
       try
       {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         update.Id = id;
+        update.UserId = userId;
         return Ok(_ks.Edit(update));
       }
       catch (Exception e)
@@ -78,6 +82,7 @@ namespace Keepr.Controllers
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public ActionResult<String> Delete(int id)
     {
       try
